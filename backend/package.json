@@ -1,0 +1,40 @@
+{
+  "name": "unilogi-backend-postgresql",
+  "version": "3.0.0",
+  "description": "Backend sécurisé pour UniLogi avec PostgreSQL et Google Places API",
+  "type": "module",
+  "main": "server-postgresql.js",
+  "scripts": {
+    "start": "node server-postgresql.js",
+    "dev": "nodemon server-postgresql.js",
+    "https": "USE_HTTPS=true node server-postgresql.js",
+    "generate-ssl": "bash generate-ssl.sh",
+    "db:setup": "psql -U postgres -f ../database/schema.sql",
+    "db:seed": "psql -U postgres -f ../database/seed.sql",
+    "db:migrate": "node migrate-from-lowdb.js"
+  },
+  "keywords": [
+    "unilogi",
+    "backend",
+    "api",
+    "secure",
+    "postgresql",
+    "google-places"
+  ],
+  "author": "UniLogi Team",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.18.0",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

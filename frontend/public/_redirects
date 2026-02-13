@@ -1,0 +1,6 @@
+# Redirections Netlify pour React Router
+# Ce fichier doit être placé dans frontend/public/
+
+# Toutes les routes sont redirigées vers index.html
+# pour permettre au React Router de gérer la navigation
+/*    /index.html   200

@@ -1,0 +1,181 @@
+{
+  "users": [
+    {
+      "id": "1770775512646",
+      "name": "RE",
+      "email": "dbz@gmail.com",
+      "password": "Test1234",
+      "emailVerified": true,
+      "verified": true,
+      "createdAt": "2026-02-11T02:05:12.646Z"
+    },
+    {
+      "id": "1770777450720",
+      "name": "RE",
+      "email": "losgamer2077@gmail.com",
+      "password": "$2a$12$dWO/d35291kJh.XhwSKwhusSEzAIuvi3Yz2eQ6enzUq4lvgMkc7uG",
+      "emailVerified": false,
+      "verified": false,
+      "createdAt": "2026-02-11T02:37:30.720Z"
+    },
+    {
+      "id": "1770778866180",
+      "name": "RE",
+      "email": "2077@gmail.com",
+      "password": "$2a$12$efxxua9izagkaa7FclGAB.NDqzcnrUYZs3KTE86YsGJGd.C3lYSeC",
+      "emailVerified": false,
+      "verified": false,
+      "createdAt": "2026-02-11T03:01:06.180Z"
+    }
+  ],
+  "apartments": [
+    {
+      "id": 1,
+      "title": "Studio moderne Quartier Latin",
+      "address": "12 Rue de la Harpe, 75005 Paris",
+      "latitude": 48.852,
+      "longitude": 2.3434,
+      "price": 850,
+      "rooms": 1,
+      "surface": 25,
+      "description": "Charmant studio au cœur du Quartier Latin, proche de la Sorbonne",
+      "images": [
+        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+      ],
+      "furnished": true,
+      "petFriendly": false,
+      "hasParking": false,
+      "landlordId": "landlord1"
+    },
+    {
+      "id": 2,
+      "title": "T2 Montmartre avec vue",
+      "address": "45 Rue Lepic, 75018 Paris",
+      "latitude": 48.8867,
+      "longitude": 2.335,
+      "price": 1200,
+      "rooms": 2,
+      "surface": 45,
+      "description": "Bel appartement avec vue sur Sacré-Cœur",
+      "images": [
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688"
+      ],
+      "furnished": true,
+      "petFriendly": true,
+      "hasParking": false,
+      "landlordId": "landlord2"
+    },
+    {
+      "id": 3,
+      "title": "T3 Marais spacieux",
+      "address": "18 Rue des Francs Bourgeois, 75003 Paris",
+      "latitude": 48.8583,
+      "longitude": 2.3606,
+      "price": 1650,
+      "rooms": 3,
+      "surface": 65,
+      "description": "Grand appartement familial dans le Marais historique",
+      "images": [
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2"
+      ],
+      "furnished": false,
+      "petFriendly": true,
+      "hasParking": true,
+      "landlordId": "landlord1"
+    },
+    {
+      "id": 4,
+      "title": "Studio Saint-Germain",
+      "address": "28 Rue de Seine, 75006 Paris",
+      "latitude": 48.8544,
+      "longitude": 2.3363,
+      "price": 950,
+      "rooms": 1,
+      "surface": 28,
+      "description": "Studio élégant à Saint-Germain-des-Prés",
+      "images": [
+        "https://images.unsplash.com/photo-1493809842364-78817add7ffb"
+      ],
+      "furnished": true,
+      "petFriendly": false,
+      "hasParking": false,
+      "landlordId": "landlord3"
+    },
+    {
+      "id": 5,
+      "title": "T2 Bastille moderne",
+      "address": "56 Rue de la Roquette, 75011 Paris",
+      "latitude": 48.8554,
+      "longitude": 2.3764,
+      "price": 1100,
+      "rooms": 2,
+      "surface": 50,
+      "description": "Appartement rénové près de Bastille",
+      "images": [
+        "https://images.unsplash.com/photo-1556912173-3bb406ef7e77"
+      ],
+      "furnished": true,
+      "petFriendly": false,
+      "hasParking": true,
+      "landlordId": "landlord2"
+    },
+    {
+      "id": 6,
+      "title": "T4 République familial",
+      "address": "34 Boulevard du Temple, 75003 Paris",
+      "latitude": 48.8628,
+      "longitude": 2.3662,
+      "price": 1900,
+      "rooms": 4,
+      "surface": 85,
+      "description": "Grand appartement parfait pour une famille",
+      "images": [
+        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6"
+      ],
+      "furnished": false,
+      "petFriendly": true,
+      "hasParking": true,
+      "landlordId": "landlord3"
+    },
+    {
+      "id": 7,
+      "title": "Studio Étoile chic",
+      "address": "12 Avenue Marceau, 75008 Paris",
+      "latitude": 48.8692,
+      "longitude": 2.2997,
+      "price": 1050,
+      "rooms": 1,
+      "surface": 30,
+      "description": "Studio haut de gamme proche de l'Arc de Triomphe",
+      "images": [
+        "https://images.unsplash.com/photo-1502672023488-70e25813eb80"
+      ],
+      "furnished": true,
+      "petFriendly": false,
+      "hasParking": false,
+      "landlordId": "landlord1"
+    },
+    {
+      "id": 8,
+      "title": "T2 Canal Saint-Martin",
+      "address": "78 Quai de Valmy, 75010 Paris",
+      "latitude": 48.8721,
+      "longitude": 2.3645,
+      "price": 1250,
+      "rooms": 2,
+      "surface": 48,
+      "description": "Appartement avec vue sur le canal",
+      "images": [
+        "https://images.unsplash.com/photo-1554995207-c18c203602cb"
+      ],
+      "furnished": true,
+      "petFriendly": true,
+      "hasParking": false,
+      "landlordId": "landlord2"
+    }
+  ],
+  "favorites": [],
+  "messages": [],
+  "privacySettings": [],
+  "savedRoutes": []
+}
