@@ -97,7 +97,9 @@ db.data ||= {
   favorites: [],
   messages: [],
   privacySettings: [],
-  savedRoutes: []
+  savedRoutes: [],
+  communityPosts: [],
+  postComments: []
 };
 await db.write();
 
@@ -412,18 +414,45 @@ app.get('/api/apartments/:id', apiLimiter, authenticateToken, (req, res) => {
 
 app.post('/api/apartments', apiLimiter, authenticateToken, async (req, res) => {
   try {
+    const { title, location, price, rooms, surface, description, contact, image, furnished, petFriendly, hasParking } = req.body;
+    
+    if (!title || !location || !price) {
+      return res.status(400).json({ error: 'Titre, localisation et prix sont requis' });
+    }
+
+    // Générer une latitude/longitude aléatoire proche de Yaoundé pour la démo
+    const latitude = 3.848 + (Math.random() - 0.5) * 0.1;
+    const longitude = 11.502 + (Math.random() - 0.5) * 0.1;
+
     const apartment = {
       id: Date.now(),
-      ...req.body,
+      title: sanitizeInput(title),
+      location: sanitizeInput(location),
+      address: sanitizeInput(location),
+      latitude,
+      longitude,
+      price: parseInt(price),
+      rooms: parseInt(rooms) || 1,
+      surface: parseInt(surface) || 25,
+      description: sanitizeInput(description),
+      contact: sanitizeInput(contact),
+      image: image || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267',
+      images: [image || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267'],
+      furnished: furnished !== false,
+      petFriendly: petFriendly === true,
+      hasParking: hasParking === true,
       landlordId: req.user.id,
+      isCertified: false,
+      status: 'disponible',
       createdAt: new Date().toISOString()
     };
 
     db.data.apartments.push(apartment);
     await db.write();
 
-    res.json({ apartment });
+    res.json({ apartment, message: 'Appartement créé avec succès' });
   } catch (error) {
+    console.error('Erreur création appartement:', error);
     res.status(500).json({ error: 'Erreur lors de la création' });
   }
 });
@@ -573,6 +602,166 @@ app.post('/api/messages', apiLimiter, authenticateToken, async (req, res) => {
     res.json({ message });
   } catch (error) {
     res.status(500).json({ error: 'Erreur lors de l\'envoi' });
+  }
+});
+
+// ===== COMMUNITY POSTS ROUTES =====
+
+// Récupérer tous les posts
+app.get('/api/community/posts', apiLimiter, authenticateToken, (req, res) => {
+  const posts = (db.data.communityPosts || []).map(post => ({
+    ...post,
+    like_count: post.likes || 0,
+    comment_count: (db.data.postComments || []).filter(c => c.postId === post.id).length,
+    user_liked: (post.likedBy || []).includes(req.user.id)
+  }));
+  
+  res.json({ posts: posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) });
+});
+
+// Créer un nouveau post
+app.post('/api/community/posts', apiLimiter, authenticateToken, async (req, res) => {
+  try {
+    const { content, image_url } = req.body;
+    
+    if (!content || !content.trim()) {
+      return res.status(400).json({ error: 'Le contenu est requis' });
+    }
+
+    const user = db.data.users.find(u => u.id === req.user.id);
+    const userName = user?.name || 'Utilisateur';
+    
+    const post = {
+      id: Date.now(),
+      userId: req.user.id,
+      author_name: userName,
+      author_avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userName}`,
+      content: sanitizeInput(content),
+      image_url: image_url || null,
+      likes: 0,
+      likedBy: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    db.data.communityPosts = db.data.communityPosts || [];
+    db.data.communityPosts.push(post);
+    await db.write();
+
+    res.json({ post: {
+      ...post,
+      like_count: 0,
+      comment_count: 0,
+      user_liked: false
+    }});
+  } catch (error) {
+    console.error('Erreur création post:', error);
+    res.status(500).json({ error: 'Erreur lors de la création du post' });
+  }
+});
+
+// Liker/Unliker un post
+app.post('/api/community/posts/:postId/like', apiLimiter, authenticateToken, async (req, res) => {
+  try {
+    const postId = parseInt(req.params.postId);
+    db.data.communityPosts = db.data.communityPosts || [];
+    
+    const post = db.data.communityPosts.find(p => p.id === postId);
+    if (!post) {
+      return res.status(404).json({ error: 'Post non trouvé' });
+    }
+
+    post.likedBy = post.likedBy || [];
+    const userIndex = post.likedBy.indexOf(req.user.id);
+    
+    if (userIndex > -1) {
+      // Unlike
+      post.likedBy.splice(userIndex, 1);
+      post.likes = (post.likes || 1) - 1;
+      await db.write();
+      res.json({ liked: false, message: 'Like retiré' });
+    } else {
+      // Like
+      post.likedBy.push(req.user.id);
+      post.likes = (post.likes || 0) + 1;
+      await db.write();
+      res.json({ liked: true, message: 'Post liké' });
+    }
+  } catch (error) {
+    console.error('Erreur like post:', error);
+    res.status(500).json({ error: 'Erreur lors du like' });
+  }
+});
+
+// Supprimer un post
+app.delete('/api/community/posts/:postId', apiLimiter, authenticateToken, async (req, res) => {
+  try {
+    const postId = parseInt(req.params.postId);
+    db.data.communityPosts = db.data.communityPosts || [];
+    
+    const postIndex = db.data.communityPosts.findIndex(p => p.id === postId && p.userId === req.user.id);
+    
+    if (postIndex === -1) {
+      return res.status(404).json({ error: 'Post non trouvé ou non autorisé' });
+    }
+
+    db.data.communityPosts.splice(postIndex, 1);
+    await db.write();
+
+    res.json({ success: true, message: 'Post supprimé' });
+  } catch (error) {
+    console.error('Erreur suppression post:', error);
+    res.status(500).json({ error: 'Erreur lors de la suppression' });
+  }
+});
+
+// Ajouter un commentaire
+app.post('/api/community/posts/:postId/comments', apiLimiter, authenticateToken, async (req, res) => {
+  try {
+    const postId = parseInt(req.params.postId);
+    const { content } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({ error: 'Le commentaire est requis' });
+    }
+
+    const user = db.data.users.find(u => u.id === req.user.id);
+    const userName = user?.name || 'Utilisateur';
+
+    const comment = {
+      id: Date.now(),
+      postId,
+      userId: req.user.id,
+      author_name: userName,
+      content: sanitizeInput(content),
+      createdAt: new Date().toISOString()
+    };
+
+    db.data.postComments = db.data.postComments || [];
+    db.data.postComments.push(comment);
+    await db.write();
+
+    res.json({ comment });
+  } catch (error) {
+    console.error('Erreur création commentaire:', error);
+    res.status(500).json({ error: 'Erreur lors de la création du commentaire' });
+  }
+});
+
+// Récupérer les commentaires d'un post
+app.get('/api/community/posts/:postId/comments', apiLimiter, authenticateToken, (req, res) => {
+  try {
+    const postId = parseInt(req.params.postId);
+    db.data.postComments = db.data.postComments || [];
+    
+    const comments = db.data.postComments
+      .filter(c => c.postId === postId)
+      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+    res.json({ comments });
+  } catch (error) {
+    console.error('Erreur récupération commentaires:', error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des commentaires' });
   }
 });
 

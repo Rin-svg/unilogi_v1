@@ -12,6 +12,7 @@ import Profile from './pages/Profile.jsx';
 import Map from './pages/Map.jsx';
 import MapEnhanced from './pages/MapEnhanced.jsx';
 import AddApartment from './pages/AddApartment.jsx';
+import MyListings from './pages/MyListings.jsx';
 import Favorites from './pages/Favorites.jsx';
 import SchoolSearch from './pages/SchoolSearch.jsx';
 import Privacy from './pages/Privacy.jsx';
@@ -23,6 +24,17 @@ function App() {
     return localStorage.getItem('token') !== null;
   };
 
+  const wrap = (children) => (
+    <ProtectedRoute>
+      <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
+        <Navbar />
+        {children}
+        <BottomNav />
+        <AIChatbot />
+      </div>
+    </ProtectedRoute>
+  );
+
   return (
     <Router>
       <Routes>
@@ -32,148 +44,20 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
 
         {/* Routes protégées */}
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
-                <Navbar />
-                <Home />
-                <BottomNav />
-                <AIChatbot />
-              </div>
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/apartment/:id"
-          element={
-            <ProtectedRoute>
-              <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
-                <Navbar />
-                <ApartmentDetails />
-                <BottomNav />
-                <AIChatbot />
-              </div>
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/community"
-          element={
-            <ProtectedRoute>
-              <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
-                <Navbar />
-                <Community />
-                <BottomNav />
-                <AIChatbot />
-              </div>
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
-                <Navbar />
-                <Profile />
-                <BottomNav />
-                <AIChatbot />
-              </div>
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/map"
-          element={
-            <ProtectedRoute>
-              <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
-                <Navbar />
-                <MapEnhanced />
-                <BottomNav />
-                <AIChatbot />
-              </div>
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/favorites"
-          element={
-            <ProtectedRoute>
-              <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
-                <Navbar />
-                <Favorites />
-                <BottomNav />
-                <AIChatbot />
-              </div>
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/schools"
-          element={
-            <ProtectedRoute>
-              <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
-                <Navbar />
-                <SchoolSearch />
-                <BottomNav />
-                <AIChatbot />
-              </div>
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/privacy"
-          element={
-            <ProtectedRoute>
-              <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
-                <Navbar />
-                <Privacy />
-                <BottomNav />
-                <AIChatbot />
-              </div>
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/directions"
-          element={
-            <ProtectedRoute>
-              <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
-                <Navbar />
-                <Directions />
-                <BottomNav />
-                <AIChatbot />
-              </div>
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/add"
-          element={
-            <ProtectedRoute>
-              <div className="max-w-[480px] mx-auto min-h-screen bg-white shadow-2xl relative pb-20">
-                <Navbar />
-                <AddApartment />
-                <BottomNav />
-                <AIChatbot />
-              </div>
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/home"           element={wrap(<Home />)} />
+        <Route path="/apartment/:id"  element={wrap(<ApartmentDetails />)} />
+        <Route path="/community"      element={wrap(<Community />)} />
+        <Route path="/profile"        element={wrap(<Profile />)} />
+        <Route path="/map"            element={wrap(<MapEnhanced />)} />
+        <Route path="/favorites"      element={wrap(<Favorites />)} />
+        <Route path="/schools"        element={wrap(<SchoolSearch />)} />
+        <Route path="/privacy"        element={wrap(<Privacy />)} />
+        <Route path="/directions"     element={wrap(<Directions />)} />
+        <Route path="/add"            element={wrap(<AddApartment />)} />
+        <Route path="/my-listings"    element={wrap(<MyListings />)} />
 
         {/* Redirection par défaut */}
-        <Route path="*" element={<Navigate to={isAuthenticated() ? "/home" : "/"} replace />} />
+        <Route path="*" element={<Navigate to={isAuthenticated() ? '/home' : '/'} replace />} />
       </Routes>
     </Router>
   );
