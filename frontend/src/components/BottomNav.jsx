@@ -13,15 +13,15 @@ const BottomNav = () => {
         
         {/* Accueil */}
         <Link 
-          to="/" 
-          className={`flex flex-col items-center gap-1 transition-all ${isActive('/') ? 'scale-110' : 'scale-100'}`}
+          to="/home" 
+          className={`flex flex-col items-center gap-1 transition-all ${isActive('/home') ? 'scale-110' : 'scale-100'}`}
         >
           <Home 
             size={24} 
-            color={isActive('/') ? '#09392D' : '#9CA3AF'} 
-            fill={isActive('/') ? '#94D358' : 'none'} 
+            color={isActive('/home') ? '#09392D' : '#9CA3AF'} 
+            fill={isActive('/home') ? '#94D358' : 'none'} 
           />
-          <span className={`text-[10px] font-bold ${isActive('/') ? 'text-[#09392D]' : 'text-gray-400'}`}>
+          <span className={`text-[10px] font-bold ${isActive('/home') ? 'text-[#09392D]' : 'text-gray-400'}`}>
             Accueil
           </span>
         </Link>
