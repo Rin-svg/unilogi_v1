@@ -41,7 +41,9 @@ app.use(helmet({
 }));
 
 // CORS configuré de manière sécurisée
+// Origines autorisées : localhost + URL Netlify définie dans FRONTEND_URL
 const allowedOrigins = [
+  process.env.FRONTEND_URL,
   'http://localhost:5173',
   'https://localhost:5173',
   'http://localhost:3001',
@@ -808,22 +810,7 @@ httpServer.listen(HTTP_PORT, () => {
   console.log('═══════════════════════════════════════════════════════════');
 });
 
-// Serveur HTTPS (production)
-if (process.env.USE_HTTPS === 'true') {
-  try {
-    const httpsOptions = {
-      key: fs.readFileSync(join(__dirname, 'ssl', 'server.key')),
-      cert: fs.readFileSync(join(__dirname, 'ssl', 'server.cert'))
-    };
-
-    const httpsServer = https.createServer(httpsOptions, app);
-    httpsServer.listen(HTTPS_PORT, () => {
-      console.log(`🔐 HTTPS Server: https://localhost:${HTTPS_PORT}`);
-    });
-  } catch (error) {
-    console.error('❌ Erreur lors du démarrage HTTPS:', error.message);
-    console.log('💡 Utilisez le script generate-ssl.sh pour générer les certificats SSL');
-  }
-}
+// Sur Render, le HTTPS est géré automatiquement par la plateforme.
+// Pas besoin de certificats SSL manuels.
 
 export default app;
